@@ -17,9 +17,15 @@ class Member:
         self.address = address
         self.membership_date = membership_date
 
+    
     def __str__(self):
-        return (
-            f"ID: {self.member_id} | Name: {self.name} | Gender: {self.gender} | "
-            f"Phone: {self.phone} | Email: {self.email} | Address: {self.address} | "
-            f"Joined: {self.membership_date}"
+            return (
+        f"\nMember ID       : {self.member_id}"
+        f"\nName            : {self.name}"
+        f"\nGender          : {self.gender}"
+        f"\nPhone           : {self.phone}"
+        f"\nEmail           : {self.email}"
+        f"\nAddress         : {self.address}"
+        f"\nMembership Date : {self.membership_date}"
+    )
         )
