@@ -10,7 +10,8 @@ def get_connection():
             host=HOST,
             user=USER,
             password=PASSWORD,
-            database=DATABASE
+            database=DATABASE,
+            use_pure=True
         )
 
         return connection
