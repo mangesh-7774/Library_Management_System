@@ -1,5 +1,19 @@
-from menus.member_menu import display_member_menu
+from auth.login import login
+from menus.main_menu import main_menu
 
+def main():
+  print("\n" + "=" * 30 + "Library Management System" + "=" * 30)
+  
+  while True: 
+    if login():
+      main_menu()
+    else:
+      print("\nInvalid username or password")
 
-if __name__ == "__main__":
-                display_member_menu()
+      choice = input("\nTry Again? (y/n) : ").lower()
+
+      if choice != "y" : 
+        print("Exit system")
+        break
+        
+main()

@@ -28,4 +28,4 @@ class Member:
         f"\nAddress         : {self.address}"
         f"\nMembership Date : {self.membership_date}"
     )
-        )
+        
