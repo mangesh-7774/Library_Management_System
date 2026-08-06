@@ -9,7 +9,6 @@ class BookService:
         conn = get_connection()
         cursor = conn.cursor()
 
-        book_id = int(input("Enter Book ID: "))
         title = input("Enter Book Title: ")
         author = input("Enter Author: ")
         category = input("Enter Category: ")
@@ -19,13 +18,12 @@ class BookService:
 
         query = """
         INSERT INTO books
-        (book_id, title, author, category, publisher,
+        (title, author, category, publisher,
         total_quantity, available_quantity)
-        VALUES (%s,%s,%s,%s,%s,%s,%s)
+        VALUES (%s,%s,%s,%s,%s,%s)
         """
 
         values = (
-            book_id,
             title,
             author,
             category,
@@ -56,7 +54,8 @@ class BookService:
         else:
             print("\n========== BOOK LIST ==========")
             for book in books:
-                print(book)
+                book_obj=Book(*book)
+                print(book_obj)
 
         cursor.close()
         conn.close()
@@ -77,7 +76,8 @@ class BookService:
 
         if book:
             print("\nBook Found")
-            print(book)
+            book_obj = Book(*book)
+            print(book_obj)
         else:
             print("Book not found.")
 
