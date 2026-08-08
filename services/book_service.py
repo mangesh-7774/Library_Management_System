@@ -14,7 +14,7 @@ class BookService:
         category = input("Enter Category: ")
         publisher = input("Enter Publisher: ")
         total_quantity = int(input("Enter Total Quantity: "))
-        available_quantity = int(input("Enter Available Quantity: "))
+        # available_quantity = int(input("Enter Available Quantity: "))
 
         query = """
         INSERT INTO books
@@ -29,7 +29,7 @@ class BookService:
             category,
             publisher,
             total_quantity,
-            available_quantity
+            total_quantity
         )
 
         cursor.execute(query, values)
