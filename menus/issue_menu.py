@@ -4,15 +4,15 @@ service = IssueService()
 
 def issue_menu():
     while True:
-        print("\n========== ISSUE & RETURN MENU ==========")
+        print("\n====== ISSUE & RETURN Management ======\n")
         print("1. Issue Book")
         print("2. View Issued Books")
         print("3. Search Issue")
         print("4. Return Book")
         print("5. View Member Issues")
-        print("6. Back")
+        print("6. Back TO Main Menu")
 
-        choice = input("Enter Your Choice: ")
+        choice = input("\nEnter Your Choice: ")
 
         if choice == "1":
             service.issue_book()
@@ -30,11 +30,9 @@ def issue_menu():
             service.view_member_issues()
 
         elif choice == "6":
-            print("Returning to Main Menu...")
+            print("\nReturning to Main Menu...")
             break
 
         else:
-            print("Invalid Choice! Please Try Again.")
+            print("\nInvalid Choice! Please Try Again.")
 
-if __name__ == "__main__":
-    issue_menu()

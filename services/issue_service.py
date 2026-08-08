@@ -104,17 +104,20 @@ class IssueService:
             print("\n========== ISSUED BOOKS ==========")
 
             for record in records:
-                print(
-                    f"""
-                    Issue ID     : {record[0]}
-                    Book Title   : {record[1]}
-                    Member Name  : {record[2]}
-                    Issue Date   : {record[3]}
-                    Due Date     : {record[4]}
-                    Return Date  : {record[5]}
-                    Status       : {record[6]}
-                    ----------------------------------"""
-                )
+                # print(
+                #     f"""
+                #     Issue ID     : {record[0]}
+                #     Book Title   : {record[1]}
+                #     Member Name  : {record[2]}
+                #     Issue Date   : {record[3]}
+                #     Due Date     : {record[4]}
+                #     Return Date  : {record[5]}
+                #     Status       : {record[6]}
+                #     ----------------------------------"""
+                # )
+                issue_obj=Issue(*record)
+                print(issue_obj)
+            
 
         cursor.close()
         conn.close()

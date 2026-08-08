@@ -3,9 +3,7 @@ from services.member_service import MemberService
 
 def display_member_menu():
     while True:
-        print("\n" + "=" * 30)
-        print("    MEMBER MANAGEMENT MENU    ")
-        print("=" * 30)
+        print("\n===== MEMBER MANAGEMENT =====\n")
         print("1. Add New Member")
         print("2. View All Members")
         print("3. Search Member by ID")
@@ -15,7 +13,7 @@ def display_member_menu():
         choice = input("\nEnter your choice (1-5): ").strip()
 
         if choice == "1":
-            print("\n--- Add New Member ---")
+            print("\n--- Add New Member ---\n")
             name = input("Enter Name: ")
             gender = input("Enter Gender: ")
             phone = input("Enter Phone: ")
@@ -28,13 +26,13 @@ def display_member_menu():
             )
 
         elif choice == "2":
-            print("\n--- Registered Members ---")
+            print("\n--- All Members ---\n")
             members = MemberService.get_all_members()
             if members:
                 for member in members:
                     print(member)
             else:
-                print("No members found in the database.")
+                print("\nNo members found in the database.")
 
         elif choice == "3":
             member_id = input("\nEnter Member ID to search: ")
@@ -43,7 +41,7 @@ def display_member_menu():
                 print("\nMember Details:")
                 print(member)
             else:
-                print(f"No member found with ID: {member_id}")
+                print(f"\nNo member found with ID: {member_id}")
 
         elif choice == "4":
             member_id = input("\nEnter Member ID to delete: ")
@@ -52,5 +50,5 @@ def display_member_menu():
         elif choice == "5":
             break
         else:
-            print("Invalid selection. Please enter a number from 1 to 5.")
+            print("\nInvalid selection. Please enter a number from 1 to 5.")
         

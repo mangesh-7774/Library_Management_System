@@ -4,15 +4,15 @@ service = BookService()
 
 def book_menu():
     while True:
-        print("\n===== BOOK MANAGEMENT =====")
+        print("\n===== BOOK MANAGEMENT =====\n")
         print("1. Add Book")
         print("2. View Books")
         print("3. Search Book")
         print("4. Update Book")
         print("5. Delete Book")
-        print("6. Exit")
+        print("6. Back To Main Menu")
     
-        choice = input("Enter your choice: ")
+        choice = input("\nEnter your choice: ")
     
         if choice == "1":
             service.add_book()
@@ -30,8 +30,8 @@ def book_menu():
             service.delete_book()
     
         elif choice == "6":
-            print("Thank You!")
+            print("\nThank You!")
             break
     
         else:
-            print("Invalid Choice!")
+            print("\nInvalid Choice!")
