@@ -1,18 +1,32 @@
+from rich.panel import Panel
+from rich.align import Align
+from rich.console import Console
 from services.issue_service import IssueService
+
+console = Console()
 
 service = IssueService()
 
 def issue_menu():
     while True:
-        print("\n====== ISSUE & RETURN Management ======\n")
-        print("1. Issue Book")
-        print("2. View Issued Books")
-        print("3. Search Issue")
-        print("4. Return Book")
-        print("5. View Member Issues")
-        print("6. Back TO Main Menu")
+        print()
+        console.print(
+            Panel(
+                Align.center(
+                    "[bold green]ISSUE & RETURN Management[/]"
+                ),
+                border_style = "bright_magenta"
+            )
+        )
 
-        choice = input("\nEnter Your Choice: ")
+        console.print("\n[bold white]1.[/] Issue Book")
+        console.print("[bold white]2.[/] View Issued Books")
+        console.print("[bold white]3.[/] Search Issue")
+        console.print("[bold white]4.[/] Return Book")
+        console.print("[bold white]5.[/] View Member Issues")
+        console.print("[bold white]6.[/] Back TO Main Menu")
+
+        choice = console.input("\n[bold yellow]Enter Your Choice: [/]")
 
         if choice == "1":
             service.issue_book()
@@ -30,9 +44,9 @@ def issue_menu():
             service.view_member_issues()
 
         elif choice == "6":
-            print("\nReturning to Main Menu...")
+            console.print("\n:heavy_check_mark: [bold green]Back to main menu[/]")
             break
 
         else:
-            print("\nInvalid Choice! Please Try Again.")
+            console.print("\n:X: [bold red]Invalid Choice! Please Try Again[/]")
 
