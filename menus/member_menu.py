@@ -1,56 +1,61 @@
+from rich.panel import Panel
+from rich.align import Align
+from rich.console import Console
+
 from services.member_service import MemberService
+
+console = Console()
+
+
+service = MemberService()
 
 
 def display_member_menu():
+
     while True:
-        print("\n" + "=" * 30)
-        print("    MEMBER MANAGEMENT MENU    ")
-        print("=" * 30)
-        print("1. Add New Member")
-        print("2. View All Members")
-        print("3. Search Member by ID")
-        print("4. Delete Member")
-        print("5. Back to Main Menu")
 
-        choice = input("\nEnter your choice (1-5): ").strip()
+        console.print()
 
-        if choice == "1":
-            print("\n--- Add New Member ---")
-            name = input("Enter Name: ")
-            gender = input("Enter Gender: ")
-            phone = input("Enter Phone: ")
-            email = input("Enter Email: ")
-            address = input("Enter Address: ")
-            membership_date = input("Enter Membership Date (YYYY-MM-DD): ")
-
-            MemberService.add_member(
-                name, gender, phone, email, address, membership_date
+        console.print(
+            Panel(
+                Align.center(
+                    "[bold green]MEMBER MANAGEMENT[/]"
+                ),
+                border_style="bright_magenta",
             )
+        )
 
-        elif choice == "2":
-            print("\n--- Registered Members ---")
-            members = MemberService.get_all_members()
-            if members:
-                for member in members:
-                    print(member)
-            else:
-                print("No members found in the database.")
+        console.print("\n[bold white]1.[/] Add New Member")
+        console.print("[bold white]2.[/] View All Members")
+        console.print("[bold white]3.[/] Search Member by ID")
+        console.print("[bold white]4.[/] Delete Member")
+        console.print("[bold white]5.[/] Back to Main Menu")
 
-        elif choice == "3":
-            member_id = input("\nEnter Member ID to search: ")
-            member = MemberService.get_member_by_id(member_id)
-            if member:
-                print("\nMember Details:")
-                print(member)
-            else:
-                print(f"No member found with ID: {member_id}")
+        choice = console.input(
+            "\n[bold yellow]Enter your choice: [/]"
+        )
 
-        elif choice == "4":
-            member_id = input("\nEnter Member ID to delete: ")
-            MemberService.delete_member(member_id)
+        match choice:
 
-        elif choice == "5":
-            break
-        else:
-            print("Invalid selection. Please enter a number from 1 to 5.")
-        
+            case "1":
+                service.add_member()
+
+            case "2":
+                service.get_all_members()
+
+            case "3":
+                service.get_member_by_id()
+
+            case "4":
+                service.delete_member()
+
+            case "5":
+                console.print(
+                    "\n:heavy_check_mark: [bold green]Back to Main Menu. Thank You![/]"
+                )
+                break
+
+            case _:
+                console.print(
+                    "\n:x: [bold red]Invalid Choice![/]"
+                )
