@@ -1,57 +1,30 @@
-# from services.report_service import (
-#     book_inventory_report,
-#     issue_return_report,
-#     library_summary,
-#     most_issued_books,
-# )
-
-
-# def report_menu():
-#   while True:
-#     print("\n==============================")
-#     print("          REPORT MENU")
-#     print("==============================")
-#     print("1. Library Summary")
-#     print("2. Book Inventory Report")
-#     print("3. Issue & Return Report")
-#     print("4. Most Issued Books")
-#     print("5. Back")
-
-#     choice = input("\nEnter your choice (1-5): ").strip()
-
-#     if choice == "1":
-#       library_summary()
-#     elif choice == "2":
-#       book_inventory_report()
-#     elif choice == "3":
-#       issue_return_report()
-#     elif choice == "4":
-#       most_issued_books()
-#     elif choice == "5":
-#       print("Returning to previous menu...")
-#       break
-#     else:
-#       print("Invalid choice! Please enter a number between 1 and 5.")
-
-
-# if __name__ == "__main__":
-#   report_menu()
-
+from rich.panel import Panel
+from rich.align import Align
+from rich.console import Console
 from services.report_service import ReportService
 
+console = Console()
 
 def report_menu():
 
     while True:
+        print()
+        
+        console.print(
+            Panel(
+                Align.center(
+                    "[bold green]Reports[/]"
+                ),
+                border_style="bright_magenta",
+            )
+        )
+        console.print("\n[bold white]1.[/] Library Summary")
+        console.print("[bold white]2.[/] Book Inventory Report")
+        console.print("[bold white]3.[/] Issue & Return Report")
+        console.print("[bold white]4.[/] Most Issued Books")
+        console.print("[bold white]5.[/] Back To Main Menu")
 
-        print("\n===== Reports =====\n")
-        print("1. Library Summary")
-        print("2. Book Inventory Report")
-        print("3. Issue & Return Report")
-        print("4. Most Issued Books")
-        print("5. Back To Main Menu")
-
-        choice = input("\nEnter your choice: ")
+        choice = console.input("\n[bold yellow]Enter your choice: [/]")
 
         if choice == "1":
             ReportService.library_summary()
@@ -66,7 +39,8 @@ def report_menu():
             ReportService.most_issued_books()
 
         elif choice == "5":
+            console.print("\n:heavy_check_mark: [bold green]Back to main menu[/]")
             break
 
         else:
-            print("\nInvalid choice. Please try again.")
+            console.print("\n:X: [bold red]Invalid choice. Please try again[/]")

@@ -1,274 +1,30 @@
-# import matplotlib.pyplot as plt
-
-
-# def get_db_connection():
-#   # Uses the project's connection utility if available, falls back to mysql.connector
-#   try:
-#     from database.connection import get_connection
-
-#     return get_connection()
-#   except ImportError:
-#     import mysql.connector
-
-#     return mysql.connector.connect(
-#         host="localhost",
-#         user="root",
-#         password="hanipatil",  # Update with your MySQL password if required
-#         database="library_db",
-#     )
-
-
-# def _get_column_sum(cursor, table, possible_columns):
-#   try:
-#     cursor.execute(f"SHOW COLUMNS FROM {table}")
-#     existing_cols = [row[0].lower() for row in cursor.fetchall()]
-#     for col in possible_columns:
-#       if col.lower() in existing_cols:
-#         cursor.execute(f"SELECT SUM({col}) FROM {table}")
-#         val = cursor.fetchone()[0]
-#         return val if val is not None else 0
-#   except Exception:
-#     pass
-#   return 0
-
-
-# def library_summary():
-#   conn = get_db_connection()
-#   cursor = conn.cursor()
-#   try:
-#     total_books = _get_column_sum(
-#         cursor, "books", ["total_copies", "quantity", "copies", "total_stock"]
-#     )
-#     avail_copies = _get_column_sum(
-#         cursor,
-#         "books",
-#         ["available_copies", "available", "stock", "qty_available"],
-#     )
-#     issued_copies = _get_column_sum(
-#         cursor, "books", ["issued_copies", "issued", "borrowed"]
-#     )
-
-#     if total_books == 0:
-#       cursor.execute("SELECT COUNT(*) FROM books")
-#       total_books = cursor.fetchone()[0] or 0
-
-#     try:
-#       cursor.execute("SELECT COUNT(*) FROM members")
-#       total_members = cursor.fetchone()[0] or 0
-#     except Exception:
-#       total_members = 0
-
-#     active_issues = 0
-#     try:
-#       cursor.execute("SELECT COUNT(*) FROM issues WHERE status = 'active'")
-#       active_issues = cursor.fetchone()[0] or 0
-#     except Exception:
-#       try:
-#         cursor.execute(
-#             "SELECT COUNT(*) FROM issues WHERE return_date IS NULL"
-#         )
-#         active_issues = cursor.fetchone()[0] or 0
-#       except Exception:
-#         pass
-
-#     returned_books = 0
-#     try:
-#       cursor.execute("SELECT COUNT(*) FROM issues WHERE status = 'returned'")
-#       returned_books = cursor.fetchone()[0] or 0
-#     except Exception:
-#       try:
-#         cursor.execute(
-#             "SELECT COUNT(*) FROM issues WHERE return_date IS NOT NULL"
-#         )
-#         returned_books = cursor.fetchone()[0] or 0
-#       except Exception:
-#         pass
-
-#     print("\n==============================")
-#     print("        LIBRARY SUMMARY")
-#     print("==============================")
-#     print(f"Total Books: {total_books}")
-#     print(f"Available Copies: {avail_copies}")
-#     print(f"Issued Copies: {issued_copies}")
-#     print(f"Total Members: {total_members}")
-#     print(f"Active Issues: {active_issues}")
-#     print(f"Returned Books: {returned_books}")
-#   finally:
-#     cursor.close()
-#     conn.close()
-
-
-# def book_inventory_report():
-#   conn = get_db_connection()
-#   cursor = conn.cursor()
-#   try:
-#     total = _get_column_sum(
-#         cursor, "books", ["total_copies", "quantity", "copies", "total_stock"]
-#     )
-#     available = _get_column_sum(
-#         cursor,
-#         "books",
-#         ["available_copies", "available", "stock", "qty_available"],
-#     )
-#     issued = _get_column_sum(
-#         cursor, "books", ["issued_copies", "issued", "borrowed"]
-#     )
-
-#     if total == 0:
-#       cursor.execute("SELECT COUNT(*) FROM books")
-#       total = cursor.fetchone()[0] or 0
-
-#     print("\n==============================")
-#     print("    BOOK INVENTORY REPORT")
-#     print("==============================")
-#     print(f"Total Copies: {total}")
-#     print(f"Available Copies: {available}")
-#     print(f"Issued Copies: {issued}")
-
-#     categories = ["Available Copies", "Issued Copies"]
-#     values = [available, issued]
-
-#     plt.figure(figsize=(6, 4))
-#     plt.bar(categories, values, color=["#4CAF50", "#FF9800"], width=0.5)
-#     plt.title("Book Inventory: Available vs Issued")
-#     plt.ylabel("Number of Copies")
-#     plt.tight_layout()
-#     plt.show()
-#   finally:
-#     cursor.close()
-#     conn.close()
-
-
-# def issue_return_report():
-#   conn = get_db_connection()
-#   cursor = conn.cursor()
-#   try:
-#     try:
-#       cursor.execute("SELECT COUNT(*) FROM issues")
-#       total_issues = cursor.fetchone()[0] or 0
-#     except Exception:
-#       total_issues = 0
-
-#     active_issues = 0
-#     try:
-#       cursor.execute("SELECT COUNT(*) FROM issues WHERE status = 'active'")
-#       active_issues = cursor.fetchone()[0] or 0
-#     except Exception:
-#       try:
-#         cursor.execute(
-#             "SELECT COUNT(*) FROM issues WHERE return_date IS NULL"
-#         )
-#         active_issues = cursor.fetchone()[0] or 0
-#       except Exception:
-#         pass
-
-#     returned_issues = 0
-#     try:
-#       cursor.execute("SELECT COUNT(*) FROM issues WHERE status = 'returned'")
-#       returned_issues = cursor.fetchone()[0] or 0
-#     except Exception:
-#       try:
-#         cursor.execute(
-#             "SELECT COUNT(*) FROM issues WHERE return_date IS NOT NULL"
-#         )
-#         returned_issues = cursor.fetchone()[0] or 0
-#       except Exception:
-#         pass
-
-#     print("\n==============================")
-#     print("     ISSUE & RETURN REPORT")
-#     print("==============================")
-#     print(f"Total Issues: {total_issues}")
-#     print(f"Active Issues: {active_issues}")
-#     print(f"Returned Issues: {returned_issues}")
-
-#     categories = ["Active Issues", "Returned Issues"]
-#     values = [active_issues, returned_issues]
-
-#     plt.figure(figsize=(6, 4))
-#     plt.bar(categories, values, color=["#2196F3", "#9C27B0"], width=0.5)
-#     plt.title("Issue & Return Status Comparison")
-#     plt.ylabel("Count")
-#     plt.tight_layout()
-#     plt.show()
-#   finally:
-#     cursor.close()
-#     conn.close()
-
-
-# def most_issued_books():
-#   conn = get_db_connection()
-#   cursor = conn.cursor()
-#   results = []
-#   try:
-#     query = """
-#             SELECT b.title, COUNT(i.book_id) as issue_count 
-#             FROM issues i 
-#             JOIN books b ON i.book_id = b.id 
-#             GROUP BY b.id, b.title 
-#             ORDER BY issue_count DESC 
-#             LIMIT 5
-#         """
-#     cursor.execute(query)
-#     results = cursor.fetchall()
-#   except Exception:
-#     try:
-#       query = """
-#                 SELECT b.title, COUNT(*) as issue_count 
-#                 FROM issues i 
-#                 JOIN books b ON i.book_id = b.book_id 
-#                 GROUP BY b.title 
-#                 ORDER BY issue_count DESC 
-#                 LIMIT 5
-#             """
-#       cursor.execute(query)
-#       results = cursor.fetchall()
-#     except Exception:
-#       results = []
-
-#   print("\n==============================")
-#   print("    TOP 5 MOST ISSUED BOOKS")
-#   print("==============================")
-#   book_titles = []
-#   issue_counts = []
-
-#   if not results:
-#     print("No issue data available.")
-#   else:
-#     for row in results:
-#       title, count = row
-#       book_titles.append(title)
-#       issue_counts.append(count)
-#       print(f"Book: {title} | Issues: {count}")
-
-#     plt.figure(figsize=(8, 5))
-#     plt.barh(book_titles[::-1], issue_counts[::-1], color="#E91E63")
-#     plt.xlabel("Number of Issues")
-#     plt.title("Top 5 Most Issued Books")
-#     plt.tight_layout()
-#     plt.show()
-
-#   cursor.close()
-#   conn.close()
-
 import matplotlib.pyplot as plt
-
+from rich.console import Console
+from rich.table import Table
 from database.connection import get_connection
+
+
+console = Console()
 
 
 class ReportService:
 
     @staticmethod
     def library_summary():
+
         connection = get_connection()
 
         if not connection:
-            print("Database connection failed.")
+
+            console.print(
+                "\n:X: [bold red]Database connection failed.[/]"
+            )
             return
 
         cursor = connection.cursor()
 
         try:
+
             cursor.execute(
                 "SELECT SUM(total_quantity) FROM books"
             )
@@ -309,41 +65,99 @@ class ReportService:
             )
             returned_books = cursor.fetchone()[0] or 0
 
-            print("\n========================================")
-            print("           LIBRARY SUMMARY")
-            print("========================================")
-            print(f"Total Book Copies  : {total_books}")
-            print(f"Available Copies   : {available_copies}")
-            print(f"Issued Copies      : {issued_copies}")
-            print(f"Total Members      : {total_members}")
-            print(f"Total Issues       : {total_issues}")
-            print(f"Active Issues      : {active_issues}")
-            print(f"Returned Books     : {returned_books}")
-            print("========================================")
+            table = Table(
+                title="Library Summary",
+                title_style="bold bright_magenta",
+                border_style="bright_magenta",
+                header_style="bold white",
+                show_lines=True,
+                expand=True,
+                width=70
+            )
+
+            table.add_column(
+                "Report",
+                style="bold white",
+                justify="left",
+                width=40
+            )
+
+            table.add_column(
+                "Count",
+                style="green",
+                justify="center",
+                width=20
+            )
+
+            table.add_row(
+                "Total Book Copies",
+                str(total_books)
+            )
+
+            table.add_row(
+                "Available Copies",
+                str(available_copies)
+            )
+
+            table.add_row(
+                "Issued Copies",
+                str(issued_copies)
+            )
+
+            table.add_row(
+                "Total Members",
+                str(total_members)
+            )
+
+            table.add_row(
+                "Total Issues",
+                str(total_issues)
+            )
+
+            table.add_row(
+                "Active Issues",
+                str(active_issues)
+            )
+
+            table.add_row(
+                "Returned Books",
+                str(returned_books)
+            )
+
+            console.print()
+            console.print(table)
 
         except Exception as e:
-            print("Error generating library summary:", e)
+
+            console.print(
+                f"\n:X: [bold red]Error generating library summary: {e}[/]"
+            )
 
         finally:
+
             cursor.close()
             connection.close()
 
     @staticmethod
     def book_inventory_report():
+
         connection = get_connection()
 
         if not connection:
-            print("Database connection failed.")
+
+            console.print(
+                "\n:X: [bold red]Database connection failed.[/]"
+            )
             return
 
         cursor = connection.cursor()
 
         try:
+
             cursor.execute(
                 "SELECT SUM(total_quantity) FROM books"
             )
             total = cursor.fetchone()[0] or 0
-
 
             cursor.execute(
                 "SELECT SUM(available_quantity) FROM books"
@@ -352,13 +166,47 @@ class ReportService:
 
             issued = total - available
 
-            print("\n========================================")
-            print("        BOOK INVENTORY REPORT")
-            print("========================================")
-            print(f"Total Copies      : {total}")
-            print(f"Available Copies  : {available}")
-            print(f"Issued Copies     : {issued}")
-            print("========================================")
+            table = Table(
+                title="Book Inventory Report",
+                title_style="bold bright_magenta",
+                border_style="bright_magenta",
+                header_style="bold white",
+                show_lines=True,
+                expand=True,
+                width=70
+            )
+
+            table.add_column(
+                "Inventory",
+                style="bold white",
+                justify="left",
+                width=40
+            )
+
+            table.add_column(
+                "Copies",
+                style="green",
+                justify="center",
+                width=20
+            )
+
+            table.add_row(
+                "Total Copies",
+                str(total)
+            )
+
+            table.add_row(
+                "Available Copies",
+                str(available)
+            )
+
+            table.add_row(
+                "Issued Copies",
+                str(issued)
+            )
+
+            console.print()
+            console.print(table)
 
             categories = [
                 "Available Copies",
@@ -384,23 +232,32 @@ class ReportService:
             plt.show()
 
         except Exception as e:
-            print("Error generating inventory report:", e)
+
+            console.print(
+                f"\n:X: [bold red]Error generating inventory report: {e}[/]"
+            )
 
         finally:
+
             cursor.close()
             connection.close()
 
     @staticmethod
     def issue_return_report():
+
         connection = get_connection()
 
         if not connection:
-            print("Database connection failed.")
+
+            console.print(
+                "\n:X: [bold red]Database connection failed.[/]"
+            )
             return
 
         cursor = connection.cursor()
 
         try:
+
             cursor.execute(
                 "SELECT COUNT(*) FROM issued_books"
             )
@@ -415,7 +272,6 @@ class ReportService:
             )
             active_issues = cursor.fetchone()[0] or 0
 
-
             cursor.execute(
                 """
                 SELECT COUNT(*)
@@ -425,13 +281,47 @@ class ReportService:
             )
             returned_issues = cursor.fetchone()[0] or 0
 
-            print("\n========================================")
-            print("        ISSUE & RETURN REPORT")
-            print("========================================")
-            print(f"Total Issues      : {total_issues}")
-            print(f"Active Issues     : {active_issues}")
-            print(f"Returned Issues   : {returned_issues}")
-            print("========================================")
+            table = Table(
+                title="Issue & Return Report",
+                title_style="bold bright_magenta",
+                border_style="bright_magenta",
+                header_style="bold white",
+                show_lines=True,
+                expand=True,
+                width=70
+            )
+
+            table.add_column(
+                "Report",
+                style="bold white",
+                justify="left",
+                width=40
+            )
+
+            table.add_column(
+                "Count",
+                style="green",
+                justify="center",
+                width=20
+            )
+
+            table.add_row(
+                "Total Issues",
+                str(total_issues)
+            )
+
+            table.add_row(
+                "Active Issues",
+                str(active_issues)
+            )
+
+            table.add_row(
+                "Returned Issues",
+                str(returned_issues)
+            )
+
+            console.print()
+            console.print(table)
 
             categories = [
                 "Active Issues",
@@ -457,23 +347,32 @@ class ReportService:
             plt.show()
 
         except Exception as e:
-            print("Error generating issue/return report:", e)
+
+            console.print(
+                f"\n:X: [bold red]Error generating issue/return report: {e}[/]"
+            )
 
         finally:
+
             cursor.close()
             connection.close()
 
     @staticmethod
     def most_issued_books():
+
         connection = get_connection()
 
         if not connection:
-            print("Database connection failed.")
+
+            console.print(
+                "\n:X: [bold red]Database connection failed.[/]"
+            )
             return
 
         cursor = connection.cursor()
 
         try:
+
             query = """
                 SELECT
                     b.title,
@@ -490,18 +389,50 @@ class ReportService:
 
             results = cursor.fetchall()
 
-            print("\n========================================")
-            print("        TOP 5 MOST ISSUED BOOKS")
-            print("========================================")
-
             if not results:
-                print("No issue data available.")
+
+                console.print(
+                    "\n:warning: [bold yellow]No issue data available.[/]"
+                )
                 return
+
+            table = Table(
+                title="Top 5 Most Issued Books",
+                title_style="bold bright_magenta",
+                border_style="bright_magenta",
+                header_style="bold white",
+                show_lines=True,
+                expand=True,
+                width=80
+            )
+
+            table.add_column(
+                "Rank",
+                justify="center",
+                style="green",
+                width=10
+            )
+
+            table.add_column(
+                "Book Title",
+                style="green",
+                width=50
+            )
+
+            table.add_column(
+                "Issue Count",
+                justify="center",
+                style="green",
+                width=20
+            )
 
             book_titles = []
             issue_counts = []
 
-            for index, row in enumerate(results, start=1):
+            for index, row in enumerate(
+                results,
+                start=1
+            ):
 
                 title = row[0]
                 count = row[1]
@@ -509,9 +440,14 @@ class ReportService:
                 book_titles.append(title)
                 issue_counts.append(count)
 
-                print(f"{index}. {title} - {count} issues")
+                table.add_row(
+                    str(index),
+                    title,
+                    str(count)
+                )
 
-            print("========================================")
+            console.print()
+            console.print(table)
 
             plt.figure(figsize=(9, 5))
 
@@ -527,8 +463,13 @@ class ReportService:
             plt.show()
 
         except Exception as e:
-            print("Error generating most issued books report:", e)
+
+            console.print(
+                f"\n:X: [bold red]Error generating most issued books report: {e}[/]"
+            )
 
         finally:
+
             cursor.close()
             connection.close()
+
